@@ -1,29 +1,80 @@
 import { create } from 'zustand';
-import { AuthState } from '../types/auth';
 
-const mockUser = {
-  id: '1',
-  name: 'Demo User',
-  role: 'operator' as const,
-  email: 'demo@example.com',
-  avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'
+type AuthStore = {
+  user: null | { id: string; name: string; email: string };
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
+  logout: () => void;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
-  
-  login: async () => {
-    set({ user: mockUser, isAuthenticated: true });
+
+  login: async (email, password) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Ошибка входа');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      set({ 
+        user: data.user,
+        isAuthenticated: true,
+        isLoading: false 
+      });
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : 'Ошибка входа',
+        isLoading: false 
+      });
+      throw error;
+    }
   },
 
-  register: async () => {
-    set({ user: mockUser, isAuthenticated: true });
+  register: async (name, email, password) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Ошибка регистрации');
+      }
+
+      set({ isLoading: false });
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : 'Ошибка регистрации',
+        isLoading: false 
+      });
+      throw error;
+    }
   },
 
-  logout: async () => {
-    set({ user: null, isAuthenticated: false });
-  },
+  logout: () => {
+    localStorage.removeItem('token');
+    set({ 
+      user: null,
+      isAuthenticated: false 
+    });
+  }
 }));
