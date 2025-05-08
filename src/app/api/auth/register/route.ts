@@ -51,3 +51,6 @@ export async function POST(request: Request) {
     );
   }
 }
+export async function GET() {
+  return new Response('Method not allowed', { status: 405 });
+}
