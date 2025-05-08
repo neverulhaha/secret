@@ -1,7 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -27,16 +31,36 @@ export async function POST(request: Request) {
 
     if (error) throw error;
 
-    return NextResponse.json(
-      { message: 'Registration successful', user: data[0] },
-      { status: 201 }
+    return new NextResponse(
+      JSON.stringify({ message: 'Registration successful', user: data[0] }),
+      { 
+        status: 201,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      }
     );
 
   } catch (error: any) {
     console.error('Registration error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Registration failed' },
-      { status: 400 }
+    return new NextResponse(
+      JSON.stringify({ error: error.message || 'Registration failed' }),
+      { 
+        status: 400,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      }
     );
   }
+}
+export async function OPTIONS() {
+  return new NextResponse(null, { 
+    headers: {
+      ...corsHeaders,
+      'Content-Type': 'application/json'
+    }
+  });
 }

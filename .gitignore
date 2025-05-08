@@ -1,24 +1,37 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Database related
+*.db
+*.db3
+*.sqlite
+*.sql
+*.dump
+*.bak
+*.pgdump
+*.pgbackup
+/data/
+/migrations/
+/seeds/
 
+# Environment files
+.env*.local
+.env
+.env.local
+.env.development
+.env.production
+!example.env
+
+# Supabase specific
+supabase/config.toml
+supabase/.temp/
+supabase/.env
+supabase/functions/
+supabase/.service-account-*
+
+# IDE specific database configs
+.idea/dataSources/
+.idea/dataSources.xml
+.idea/*.db
+.idea/*.sql
+
+# Docker database volumes
+/docker-volumes/
 node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
