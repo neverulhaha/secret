@@ -17,7 +17,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   register: async (name, email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch('src\app\api\auth\register\route.ts', {
+      const response = await fetch('src/app/api/auth/register/route.ts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
