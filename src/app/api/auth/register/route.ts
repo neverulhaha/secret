@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
-  const headers = new Headers({
+  const headers = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
-  });
+  };
 
   try {
     const { name, email, password } = await request.json();
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     if (!name || !email || !password) {
       return new NextResponse(
         JSON.stringify({ error: "Все поля обязательны" }),
-        { status: 400, headers }
+        { status: 400, headers: new Headers(headers) }
       );
     }
 
@@ -29,7 +29,10 @@ export async function POST(request: Request) {
 
     return new NextResponse(
       JSON.stringify(result.rows[0]),
-      { status: 201, headers }
+      { 
+        status: 201,
+        headers: new Headers(headers)
+      }
     );
 
   } catch (error: any) {
@@ -38,13 +41,13 @@ export async function POST(request: Request) {
     if (error.code === '23505') {
       return new NextResponse(
         JSON.stringify({ error: "Email уже используется" }),
-        { status: 409, headers }
+        { status: 409, headers: new Headers(headers) }
       );
     }
 
     return new NextResponse(
       JSON.stringify({ error: "Ошибка сервера" }),
-      { status: 500, headers }
+      { status: 500, headers: new Headers(headers) }
     );
   }
 }
