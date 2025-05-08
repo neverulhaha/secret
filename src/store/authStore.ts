@@ -41,7 +41,21 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-    } catch (error) {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Ошибка входа');
+    }
+
+    set({ isAuthenticated: true });
+  } catch (error) {
       const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
       set({ error: message });
       throw error;
