@@ -1,31 +1,5 @@
 {
-    "headers": [
-    {
-      "source": "/(.*).js",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript"
-        }
-      ]
-    }
-  ],
-    "routes": [
-      {
-        "src": "/",
-        "dest": "/index.html",
-        "status": 200
-      },
-      {
-        "src": "/login",
-        "dest": "/index.html",
-        "status": 200
-      },
-      {
-        "src": "/.*",
-        "dest": "/index.html",
-        "status": 200
-      }
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/index.html" }
     ]
-    
   }
