@@ -9,6 +9,11 @@ export const config = {
   },
 };
 
+const headers = new Headers({
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST',
+  'Content-Type': 'application/json'
+});
 
 export async function POST(request: Request) {
   try {
@@ -22,9 +27,9 @@ export async function POST(request: Request) {
 
     if (!email || !password || !name) {
       console.error('[REGISTER] Validation failed');
-      return NextResponse.json(
-        { error: "Все поля обязательны" },
-        { status: 400 }
+      return new Response(
+        JSON.stringify({ error: "Все поля обязательны" }),
+        { status: 400, headers }
       );
     }
 
@@ -32,7 +37,7 @@ export async function POST(request: Request) {
     console.log('[REGISTER] Password hashed');
 
     const result = await query(
-      `INSERT INTO users (name, email, password_hash)
+      `INSERT INTO lunar_users (name, email, password_hash)
        VALUES ($1, $2, $3)
        RETURNING id, name, email`,
       [name, email, hashedPassword]
@@ -40,36 +45,38 @@ export async function POST(request: Request) {
     
     console.log('[REGISTER] DB insertion successful:', result.rows[0]);
     
-    return NextResponse.json(result.rows[0], { status: 201 });
+    return new Response(JSON.stringify(result.rows[0]), {
+      status: 201,
+      headers
+    });
     
   } catch (error: any) {
     console.error('[REGISTER] Error:', error);
-    console.log('[REGISTER] Error:', error);
+    
     if (error.code === '23505') {
-      return NextResponse.json(
-        { error: "Пользователь с таким email уже существует" },
-        { status: 409 }
+      return new Response(
+        JSON.stringify({ error: "Пользователь с таким email уже существует" }),
+        { status: 409, headers }
       );
     }
 
-    return NextResponse.json(
-      { error: "Ошибка сервера: " + error.message },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ error: "Ошибка сервера: " + error.message }),
+      { status: 500, headers }
     );
-    
   }
 }
 
 export async function GET() {
-  return NextResponse.json(
-    { error: "Метод не реализован" }, 
-    { status: 501 }
+  return new Response(
+    JSON.stringify({ error: "Метод не реализован" }), 
+    { status: 501, headers }
   );
 }
 
 export async function PUT() {
-  return NextResponse.json(
-    { error: "Метод не реализован" }, 
-    { status: 501 }
+  return new Response(
+    JSON.stringify({ error: "Метод не реализован" }), 
+    { status: 501, headers }
   );
 }
