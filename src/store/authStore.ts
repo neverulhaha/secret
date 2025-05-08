@@ -15,28 +15,28 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
 
   register: async (name, email, password) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await fetch('src/app/api/auth/register/route.ts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
+  set({ isLoading: true, error: null });
+  try {
+    const response = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Ошибка регистрации');
-      }
-
-      set({ isAuthenticated: true });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      set({ error: message });
-      throw error;
-    } finally {
-      set({ isLoading: false });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Ошибка регистрации');
     }
-  },
+
+    set({ isAuthenticated: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+    set({ error: message });
+    throw error;
+  } finally {
+    set({ isLoading: false });
+  }
+},
 
   login: async (email, password) => {
     set({ isLoading: true, error: null });
