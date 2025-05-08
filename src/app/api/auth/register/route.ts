@@ -1,4 +1,3 @@
-// src/app/api/auth/register/route.ts
 import { query } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
@@ -11,7 +10,6 @@ export async function POST(request: Request) {
 
   try {
     const { name, email, password } = await request.json();
-    console.log('[REGISTER] Received data:', { name, email });
 
     if (!name || !email || !password) {
       return new NextResponse(
@@ -21,7 +19,6 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('[REGISTER] Password hashed');
 
     const result = await query(
       `INSERT INTO lunar_users (name, email, password_hash)
@@ -30,15 +27,14 @@ export async function POST(request: Request) {
       [name, email, hashedPassword]
     );
 
-    console.log('[REGISTER] User created:', result.rows[0]);
     return new NextResponse(
       JSON.stringify(result.rows[0]),
       { status: 201, headers }
     );
 
   } catch (error: any) {
-    console.error('[REGISTER] Error:', error);
-
+    console.error('Ошибка регистрации:', error);
+    
     if (error.code === '23505') {
       return new NextResponse(
         JSON.stringify({ error: "Email уже используется" }),
@@ -51,11 +47,4 @@ export async function POST(request: Request) {
       { status: 500, headers }
     );
   }
-}
-
-export async function GET() {
-  return new NextResponse(
-    JSON.stringify({ error: "Метод не разрешен" }),
-    { status: 405 }
-  );
 }
