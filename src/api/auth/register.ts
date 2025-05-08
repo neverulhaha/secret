@@ -1,14 +1,14 @@
-import { query } from '../../lib/db';
-import bcrypt from 'bcryptjs';
+import { query } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { name, email, password } = await request.json();
 
-    if (!email || !password) {
+    if (!email || !password || !name) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Все поля обязательны" },
         { status: 400 }
       );
     }
@@ -16,23 +16,26 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await query(
-      `INSERT INTO users (email, password_hash)
-       VALUES ($1, $2)
-       RETURNING id, email, created_at`,
-      [email, hashedPassword]
+      `INSERT INTO users (name, email, password_hash)
+       VALUES ($1, $2, $3)
+       RETURNING id, name, email`,
+      [name, email, hashedPassword]
     );
 
     return NextResponse.json(result.rows[0], { status: 201 });
 
   } catch (error: any) {
+    console.error('Registration error:', error);
+    
     if (error.code === '23505') {
       return NextResponse.json(
-        { error: "User already exists" },
+        { error: "Пользователь с таким email уже существует" },
         { status: 409 }
       );
     }
+
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Ошибка сервера" },
       { status: 500 }
     );
   }

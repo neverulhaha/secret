@@ -47,28 +47,31 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   register: async (name, email, password) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
+  set({ isLoading: true, error: null });
+  try {
+    const response = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Ошибка регистрации');
-      }
+    const data = await response.json().catch(() => {
+      throw new Error('Неверный формат ответа сервера');
+    });
 
-      set({ isLoading: false });
-    } catch (error) {
-      set({ 
-        error: error instanceof Error ? error.message : 'Ошибка регистрации',
-        isLoading: false 
-      });
-      throw error;
+    if (!response.ok) {
+      throw new Error(data.error || 'Ошибка регистрации');
     }
-  },
+
+    set({ isLoading: false });
+    return data;
+
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+    set({ error: message, isLoading: false });
+    throw error;
+  }
+},
 
   logout: () => {
     localStorage.removeItem('token');
