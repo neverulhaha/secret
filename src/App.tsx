@@ -35,7 +35,7 @@ function App() {
         </Route>
 
         <Route element={<ProtectedRoute />}>
-          <Route element={<MainLayout />}></Route>
+          <Route element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/resources" element={<Resources />} />
@@ -48,6 +48,7 @@ function App() {
           <Route path="/security" element={<Security />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/module-placement" element={<ModulePlacement />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

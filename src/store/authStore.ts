@@ -10,8 +10,8 @@ const mockUser = {
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
-  user: mockUser,
-  isAuthenticated: true,
+  user: null,
+  isAuthenticated: false,
   isLoading: false,
   error: null,
   
