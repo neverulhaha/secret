@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { MainLayout } from './components/Layout/MainLayout';
-import { Login } from './pages/Login';
+import Login from './pages/Login';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Resources } from './pages/Resources/Resources';
 import { Navigation } from './pages/Navigation/Navigation';
@@ -15,24 +15,27 @@ import { Analytics } from './pages/Analytics/Analytics';
 import { ModulePlacement } from './pages/ModulePlacement/ModulePlacement';
 import { useAuthStore } from './store/authStore';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+};
+
+const PublicRoute = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <Outlet />;
 };
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>
-          }
-        >
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<MainLayout />}></Route>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/resources" element={<Resources />} />
@@ -46,6 +49,9 @@ function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/module-placement" element={<ModulePlacement />} />
         </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+        
       </Routes>
     </BrowserRouter>
   );
