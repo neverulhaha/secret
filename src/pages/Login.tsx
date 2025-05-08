@@ -1,6 +1,6 @@
 import React from 'react';
 import { Rocket, Loader2, AlertCircle } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 export default function Login() {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
@@ -50,12 +50,12 @@ export default function Login() {
           </button>
 
           <div className="text-center">
-            <button
-              type="button"
-              className="text-sm text-blue-600 hover:text-blue-700"
-            >
+            <Link 
+              to="/register" 
+              className="text-sm text-blue-600 hover:text-blue-700 underline"
+              >
               Не имеете аккаунта? Создайте один
-            </button>
+            </Link>
           </div>
         </form>
       </div>

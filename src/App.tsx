@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { MainLayout } from './components/Layout/MainLayout';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Resources } from './pages/Resources/Resources';
 import { Navigation } from './pages/Navigation/Navigation';
@@ -31,6 +32,7 @@ function App() {
       <Routes>
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Route>
 
