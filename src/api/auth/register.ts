@@ -9,6 +9,7 @@ export const config = {
   },
 };
 
+
 export async function POST(request: Request) {
   try {
     console.log('[REGISTER] Starting registration process');
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
     console.log('[REGISTER] DB insertion successful:', result.rows[0]);
     
     return NextResponse.json(result.rows[0], { status: 201 });
-
+    
   } catch (error: any) {
     console.error('[REGISTER] Error:', error);
     console.log('[REGISTER] Error:', error);
@@ -55,5 +56,20 @@ export async function POST(request: Request) {
       { error: "Ошибка сервера: " + error.message },
       { status: 500 }
     );
+    
   }
+}
+
+export async function GET() {
+  return NextResponse.json(
+    { error: "Метод не реализован" }, 
+    { status: 501 }
+  );
+}
+
+export async function PUT() {
+  return NextResponse.json(
+    { error: "Метод не реализован" }, 
+    { status: 501 }
+  );
 }
