@@ -11,11 +11,16 @@ export default function Register() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
+  try {
     await register(name, email, password);
-    navigate('/login');
-  };
-
+    setTimeout(() => {
+      navigate('/login');
+    }, 1000);
+  } catch (error) {
+    console.error('Registration failed:', error);
+  }
+};
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
