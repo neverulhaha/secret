@@ -2,6 +2,13 @@ import { query } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 
+export const config = {
+  api: {
+    bodyParser: true,
+    externalResolver: true,
+  },
+};
+
 export async function POST(request: Request) {
   try {
     console.log('[REGISTER] Starting registration process');
@@ -36,7 +43,7 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     console.error('[REGISTER] Error:', error);
-    
+    console.log('[REGISTER] Error:', error);
     if (error.code === '23505') {
       return NextResponse.json(
         { error: "Пользователь с таким email уже существует" },
