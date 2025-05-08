@@ -49,25 +49,33 @@ export const useAuthStore = create<AuthStore>((set) => ({
   register: async (name, email, password) => {
   set({ isLoading: true, error: null });
   try {
+    console.log('[AUTH] Starting registration');
     const response = await fetch('/api/auth/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify({ name, email, password }),
     });
 
-    const data = await response.json().catch(() => {
-      throw new Error('Неверный формат ответа сервера');
-    });
-
+    console.log('[AUTH] Response status:', response.status);
+    
     if (!response.ok) {
-      throw new Error(data.error || 'Ошибка регистрации');
+      const errorText = await response.text();
+      console.error('[AUTH] Server error:', errorText);
+      throw new Error(errorText || 'Ошибка регистрации');
     }
 
+    const data = await response.json();
+    console.log('[AUTH] Registration successful:', data);
+    
     set({ isLoading: false });
     return data;
 
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+    console.error('[AUTH] Registration failed:', error);
     set({ error: message, isLoading: false });
     throw error;
   }

@@ -4,9 +4,16 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    console.log('[REGISTER] Starting registration process');
+    
+    const requestBody = await request.text();
+    console.log('[REGISTER] Raw request body:', requestBody);
+    
+    const { name, email, password } = JSON.parse(requestBody);
+    console.log('[REGISTER] Parsed data:', { name, email });
 
     if (!email || !password || !name) {
+      console.error('[REGISTER] Validation failed');
       return NextResponse.json(
         { error: "Все поля обязательны" },
         { status: 400 }
@@ -14,6 +21,7 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('[REGISTER] Password hashed');
 
     const result = await query(
       `INSERT INTO users (name, email, password_hash)
@@ -21,11 +29,13 @@ export async function POST(request: Request) {
        RETURNING id, name, email`,
       [name, email, hashedPassword]
     );
-
+    
+    console.log('[REGISTER] DB insertion successful:', result.rows[0]);
+    
     return NextResponse.json(result.rows[0], { status: 201 });
 
   } catch (error: any) {
-    console.error('Registration error:', error);
+    console.error('[REGISTER] Error:', error);
     
     if (error.code === '23505') {
       return NextResponse.json(
@@ -35,7 +45,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: "Ошибка сервера" },
+      { error: "Ошибка сервера: " + error.message },
       { status: 500 }
     );
   }
