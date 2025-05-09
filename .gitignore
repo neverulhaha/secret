@@ -35,3 +35,33 @@ supabase/.service-account-*
 # Docker database volumes
 /docker-volumes/
 node_modules
+
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# macOS files
+.DS_Store
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Coverage reports
+coverage/
+
+# Source maps
+*.map
+
+# Other files to ignore
+*.tgz
+*.zip
