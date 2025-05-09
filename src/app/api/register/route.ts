@@ -16,7 +16,7 @@ const corsHeaders = {
 export async function POST(request: Request) {
   try {
     const { name, email, password } = await request.json();
-    
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       throw new Error('Некорректный формат email');
     }

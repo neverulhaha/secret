@@ -17,7 +17,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 register: async (name, email, password) => {
   set({ isLoading: true, error: null });
   try {
-    const response = await fetch('/api/register', {
+    const response = await fetch('http://localhost:3000/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password }),
@@ -28,6 +28,9 @@ register: async (name, email, password) => {
       throw new Error(errorText || 'Ошибка регистрации');
     }
 
+    const data = await response.json();
+    set({ isAuthenticated: true });
+    
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
     set({ error: message });
