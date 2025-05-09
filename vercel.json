@@ -3,12 +3,22 @@
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "https://secret-mishas-projects-aec9635a.vercel.app" },
-        { "key": "Access-Control-Allow-Origin", "value": "secret-black-three.vercel.app" },
-        { "key": "Access-Control-Allow-Origin", "value": "https://secret-git-main-mishas-projects-aec9635a.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "POST, OPTIONS" },
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
       ]
+    },
+    {
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_SUPABASE_URL": "https://cnmytkafkolihgqxslhe.supabase.co",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "your-anon-key",
+      "SUPABASE_SERVICE_ROLE_KEY": "your-service-role-key"
     }
+  }
+}
+
   ]
 }
+
+
