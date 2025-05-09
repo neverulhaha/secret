@@ -1,8 +1,8 @@
 // File: C:\Users\Миша\Downloads\project-bolt-sb1-n32ipt9l\project\src\app\api\register\route.ts
-import * as entry from '../../../../../src/app/api/register/route.js'
+import * as entry from '../../../../../app/api/register/route.js'
 import type { NextRequest } from 'next/server.js'
 
-type TEntry = typeof import('../../../../../src/app/api/register/route.js')
+type TEntry = typeof import('../../../../../app/api/register/route.js')
 
 type SegmentParams<T extends Object = any> = T extends Record<string, any>
   ? { [K in keyof T]: T[K] extends string ? string | string[] | undefined : never }

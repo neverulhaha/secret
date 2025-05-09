@@ -23,5 +23,5 @@
     "types": ["node", "next"],
     "noEmit": false
   },
-  "include": ["src"]
+  "include": ["src", "app/api/register/route.ts"]
 }
