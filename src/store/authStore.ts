@@ -17,11 +17,14 @@ export const useAuthStore = create<AuthState>((set) => ({
 register: async (name, email, password) => {
   set({ isLoading: true, error: null });
   try {
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-    });
+    const response = await fetch(
+  `${process.env.NEXT_PUBLIC_API_URL}/api/register`, 
+  {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password }),
+  }
+);
 
     if (!response.ok) {
       const errorText = await response.text();
