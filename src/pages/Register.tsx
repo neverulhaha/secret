@@ -14,7 +14,7 @@ export default function Register() {
     e.preventDefault();
     try {
       await register(name, email, password);
-      navigate('/login'); // ✅ без setTimeout — сразу переход
+      navigate('/login');
     } catch (error) {
       console.error('Registration failed:', error);
     }
