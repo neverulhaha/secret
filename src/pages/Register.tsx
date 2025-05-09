@@ -16,8 +16,11 @@ export default function Register() {
       await register(name, email, password);
       navigate('/login');
     } catch (error) {
-      console.error('Registration failed:', error);
-    }
+  console.error('Registration failed:', error);
+  if (error instanceof Error) {
+    useAuthStore.setState({ error: error.message });
+  }
+}
   };
 
   return (

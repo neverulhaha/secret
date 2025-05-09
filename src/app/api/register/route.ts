@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import bcrypt from 'bcryptjs';
+import { hash } from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       throw new Error('Пользователь с таким email уже существует');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hash(password, 10);
 
     const { data, error } = await supabase
       .from('lunar_users')
